@@ -11,19 +11,21 @@ Velthyra is a lightweight, centralized administrative system engineered for radi
 
 ```mermaid
 graph TD
-    A[Admin Portal] -->|Manages| B(Data Layer /JSON/)
-    A -->|Uploads| C(MP3 Library)
-    D[Stream Endpoint] -->|Reads| B
+    A["Admin Portal"] -->|Manages| B("Data Layer (JSON)")
+    A -->|Uploads| C("MP3 Library")
+    D["Stream Endpoint"] -->|Reads| B
     D -->|Reads| C
-    D -->|Outputs| E[In-Game Radio]
+    D -->|Outputs| E["In-Game Radio"]
     
-    subgraph Security Layer
-    F[Master Key]
-    G[IP Blacklist]
-    H[Audit Logs]
+    subgraph SecurityLayer ["Security Layer"]
+    F["Master Key"]
+    G["IP Blacklist"]
+    H["Audit Logs"]
     end
     
-    A -.-> Security Layer
+    A -.-> F
+    A -.-> G
+    A -.-> H
 ```
 
 ---
