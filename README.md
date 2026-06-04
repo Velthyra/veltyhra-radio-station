@@ -3,87 +3,83 @@
 [![Version](https://img.shields.io/badge/Version-3.0.1--Industrial-blueviolet?style=for-the-badge)](https://github.com/)
 [![PHP](https://img.shields.io/badge/PHP-8.x-777bb4?style=for-the-badge&logo=php)](https://www.php.net/)
 
-Velthyra is a lightweight, centralized administrative system designed for radio broadcast management and real-time streaming telemetry. It provides a multi-lingual interface for controlling in-game audio streams with precision and security.
+Velthyra is a lightweight, centralized administrative system engineered for radio broadcast management and real-time streaming telemetry.
 
 ---
 
-## Key Features
+## System Architecture / Sistem Mimarisi
 
-- **Globalization**: Native support for 6 languages (EN, TR, FR, BG, DE, RU) via central localization engine.
-- **Security**: SHA-512 Master Key authentication, session fingerprinting, and IP-level blacklisting.
-- **Telemetry**: Real-time track progress visualization and gapless stream synchronization.
-- **Data Layer**: JSON-based architecture. No database required. Portable and fast.
-- **Media Hub**: Centralized MP3 library with automated audit logging.
-
----
-
-## Deployment Guide
-
-### 1. File Upload
-Upload all files to a PHP-enabled web server. Requires PHP 8.0+ with GD and Session extensions.
-
-### 2. File Permissions
-The following directories must be writable by the server process:
-```bash
-chmod -R 775 ./data/
-chmod -R 775 ./admin/uploads/
-```
-
-### 3. Core Configuration
-Identify `includes/config.php` and define a unique Security Salt:
-```php
-define('VELORIAN_SALT', 'CHANGEMEBUDDY');
+```mermaid
+graph TD
+    A[Admin Portal] -->|Manages| B(Data Layer /JSON/)
+    A -->|Uploads| C(MP3 Library)
+    D[Stream Endpoint] -->|Reads| B
+    D -->|Reads| C
+    D -->|Outputs| E[In-Game Radio]
+    
+    subgraph Security Layer
+    F[Master Key]
+    G[IP Blacklist]
+    H[Audit Logs]
+    end
+    
+    A -.-> Security Layer
 ```
 
 ---
 
-## Administrative Access
+## [TR] TÜRKÇE REHBER
 
-**Login Path:** `http://your-domain.com/admin/login.php`
+### 1.01 Sistem Özeti
+Velthyra, radyo yayını ve içerik yönetimi için tasarlanmış merkezi bir idari arayüzdür. Veritabanı gerektirmeyen JSON mimarisi sayesinde hızlı ve taşınabilir bir yapı sunar.
 
-> [!IMPORTANT]
-> Change the Master Key.
-> Open `functions/auth.php` and locate the `VELORIAN_MASTER_KEY` constant. 
-> Replace the placeholder `CHANGEMEBUDDY` with a secure passphrase immediately.
+### 1.02 Kurulum Adımları
+1. **Dosya Aktarımı**: Tüm dosyaları PHP 8.0+ destekleyen sunucunuza yükleyin.
+2. **İzinler**: `./data/` ve `./admin/uploads/` klasörlerinin yazılabilir (CHMOD 775) olduğundan emin olun.
+3. **Konfigürasyon**: Aşağıda belirtilen kritik dosyaları güncelleyin.
 
----
-
-## XMR Radio Integration
-
-Velthyra is designed for roleplay environments requiring a constant audio stream link. Use the following Endpoint URL for in-game radio systems:
-
-### `http://your-domain.com/stream.php`
-
-**Technical Logic:**
-- **Synchronization:** The stream is synchronized for all listeners based on server-side micro-timestamping.
-- **Automated Playback:** The engine cycles through the `admin/uploads/mp3s/` library automatically.
-- **Low Latency:** Optimized for consistent playback across different geographical regions.
+### 1.03 XMR Radyo Entegrasyonu
+Oyun içi sistemlere entegre etmek için `stream.php` dosyasını kullanın.
+**Link**: `http://site-adresiniz.com/stream.php`
 
 ---
 
-## Administrator Manual
+## [EN] ENGLISH GUIDE
 
-### 1.01 Dashboard
-Summary of server health, disk usage, and user suggestions.
+### 1.01 System Overview
+Velthyra is a centralized administrative interface designed for radio broadcasting and content management. Its zero-database JSON architecture ensures high performance and portability.
 
-### 1.02 Live Monitor
-Technical telemetry view showing track offset, duration, and synchronization source.
+### 1.02 Deployment Guide
+1. **Upload**: Deploy all source files to a PHP 8.0+ web server environment.
+2. **Permissions**: Ensure `./data/` and `./admin/uploads/` are writable (CHMOD 775).
+3. **Configuration**: Update the critical files listed in the section below.
 
-### 1.03 Library Operations
-MP3 file management. Supports secure upload and deletion. Metadata extraction is handled internally.
-
-### 1.04 Security Matrix
-Access to Audit Logs for tracking administrative actions. Global Blacklist management for IP-level access control.
-
-### 1.05 Global Settings
-Site title, brand color calibration, and Maintenance Mode toggle for public traffic.
+### 1.03 XMR Radio Integration
+Use the `stream.php` endpoint for in-game radio system integration.
+**Link**: `http://yourdomain.com/stream.php`
 
 ---
 
-## Disclaimer
+## CRITICAL CONFIGURATION / DEĞİŞTİRİLECEK YERLER
 
-This product is intended for fictional roleplay purposes only. It has no affiliation with real-world broadcasting entities or regulatory frameworks.
+Güvenli bir kurulum için aşağıdaki dosyalardaki değerleri mutlaka değiştirmeniz gerekmektedir:
+
+| Dosya Yolu (Path) | Değişken (Variable) | İşlem (Action) |
+| :--- | :--- | :--- |
+| `functions/auth.php` | `VELORIAN_MASTER_KEY` | `CHANGEMEBUDDY` değerini çok uzun ve güvenli bir anahtar ile değiştirin. |
+| `includes/config.php` | `VELORIAN_SALT` | `CHANGEMEBUDDY` değerini rastgele, uzun bir metin ile değiştirin. |
+| `data/users.json` | `admin / password` | İlk girişte admin panelinden şifrenizi mutlaka güncelleyin. (Varsayılan: admin/admin) |
+
+---
+
+## Modüller / Modules
+
+- **Dashboard**: Sistem sağlığı ve sunucu istatistikleri.
+- **Live Monitor**: Parça bilgisi, saniye (offset) ve senkronizasyon takibi.
+- **Library**: MP3 yükleme, listeleme ve silme işlemleri.
+- **Security**: IP engelleme (Blacklist) ve işlem geçmişi (Audit Logs).
+- **Settings**: Site başlığı, renk teması ve bakım modu yönetimi.
 
 ---
 **VELTHYRA ENTERPRISE SOLUTIONS**  
-*Ref: VLT-MAN-2026*
+*The Structure of Sound | Ref: VLT-MAN-2026*
